@@ -4,31 +4,17 @@ Created on Tue Oct 31 21:57:13 2023
 
 @author: Harish Babu
 """
-import os
-import requests
+
 import numpy as np
 import pickle
+import joblib
 import streamlit as st
 
-# Get the raw URL of the model file on GitHub
-github_raw_url = "https://github.com/hBharish/diabetesdetection/blob/main/trained_model.sav"
+model_file = st.file_uploader("trained_model.sav", type=[".joblib"])
 
-# Specify the path to where you want to save the model file
-model_path = "trained_model.sav"
-
-# Check if the model file exists in the current directory, and if not, download it from GitHub
-if not os.path.exists(model_path):
-    response = requests.get(github_raw_url)    
-    if response.status_code == 200:
-        with open(model_path, "wb") as f:
-            f.write(response.content)
-        st.success("Model file downloaded successfully.")
-    else:
-        st.error(f"Failed to download the model file from GitHub (HTTP {response.status_code}).")
-
-# Load the model from the downloaded file
-if os.path.exists(model_path):
-    loaded_model = pickle.load(open(model_path, 'rb'))
+if model_file is not None:
+    # Load the model from the uploaded file
+    loaded_model = joblib.load(model_file)
 
 # creating a function for Prediction
 
