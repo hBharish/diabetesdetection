@@ -4,15 +4,19 @@ Created on Tue Oct 31 21:57:13 2023
 
 @author: Harish Babu
 """
-
+import os
 import numpy as np
 import pickle
 import streamlit as st
 
+# Get the current directory of the script
+current_dir = os.path.dirname(os.path.abspath(__file__))
 
-# loading the saved model
-loaded_model = pickle.load(open("trained_model.sav", 'rb'))
+# Specify the path to the model file (assuming it's in the same directory as the script)
+model_path = os.path.join(current_dir, "trained_model.sav")
 
+# Load the model
+loaded_model = pickle.load(open(model_path, 'rb'))
 
 # creating a function for Prediction
 
