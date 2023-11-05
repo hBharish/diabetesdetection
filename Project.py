@@ -5,18 +5,30 @@ Created on Tue Oct 31 21:57:13 2023
 @author: Harish Babu
 """
 import os
+import requests
 import numpy as np
 import pickle
 import streamlit as st
 
-# Get the current directory of the script
-current_dir = os.path.dirname(os.path.abspath(__file__))
+# Get the raw URL of the model file on GitHub
+github_raw_url = "https://github.com/hBharish/diabetesdetection/blob/main/trained_model.sav"
 
-# Specify the path to the model file (assuming it's in the same directory as the script)
-model_path = os.path.join(current_dir, "trained_model.sav")
+# Specify the path to where you want to save the model file
+model_path = "trained_model.sav"
 
-# Load the model
-loaded_model = pickle.load(open(model_path, 'rb'))
+# Check if the model file exists in the current directory, and if not, download it from GitHub
+if not os.path.exists(model_path):
+    response = requests.get(github_raw_url)    
+    if response.status_code == 200:
+        with open(model_path, "wb") as f:
+            f.write(response.content)
+        st.success("Model file downloaded successfully.")
+    else:
+        st.error(f"Failed to download the model file from GitHub (HTTP {response.status_code}).")
+
+# Load the model from the downloaded file
+if os.path.exists(model_path):
+    loaded_model = pickle.load(open(model_path, 'rb'))
 
 # creating a function for Prediction
 
